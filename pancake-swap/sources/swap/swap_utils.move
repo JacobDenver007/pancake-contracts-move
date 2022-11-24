@@ -49,6 +49,7 @@ module pancake::swap_utils {
     }
 
     public fun get_token_info<T>(): vector<u8> {
+        /// type_name 返回 token 完整的 resource 名，例如：0x1::coin::CoinStore
         let type_name = type_info::type_name<T>();
         *string::bytes(&type_name)
     }
@@ -78,6 +79,7 @@ module pancake::swap_utils {
         EQUAL
     }
 
+    /// 按照 token 名称排序
     public fun sort_token_type<X, Y>(): bool {
         let compare_x_y: u8 = compare_struct<X, Y>();
         assert!(compare_x_y != get_equal_enum(), ERROR_SAME_COIN);

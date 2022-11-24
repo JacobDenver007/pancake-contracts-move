@@ -18,6 +18,9 @@ module pancake::swap {
 
     friend pancake::router;
 
+    /// DEFAULT_ADMI：初始 admin，对应 SwapInfo 中 admin
+    /// RESOURCE_ACCOUNT：专门保存多个 resource 信息的 resource account（该种账户无私钥），由配置文件提供
+    /// DEV：创建 RESOURCE_ACCOUNT 的地址
     const ZERO_ACCOUNT: address = @zero;
     const DEFAULT_ADMIN: address = @default_admin;
     const RESOURCE_ACCOUNT: address = @pancake;
@@ -49,9 +52,11 @@ module pancake::swap {
     const PRECISION: u64 = 10000;
 
     /// The LP Token type
+    /// LPToken 表示 coin 类型，参见 coin::Coin 中的 CoinType 泛型
     struct LPToken<phantom X, phantom Y> has key {}
 
     /// Stores the metadata required for the token pairs
+    /// TokenPairMetadata 保存了每个交易对的信息，保存在 RESOURCE_ACCOUNT 下
     struct TokenPairMetadata<phantom X, phantom Y> has key {
         /// The admin of the token pair
         creator: address,
@@ -72,12 +77,14 @@ module pancake::swap {
     }
 
     /// Stores the reservation info required for the token pairs
+    /// 保存在 RESOURCE_ACCOUNT
     struct TokenPairReserve<phantom X, phantom Y> has key {
         reserve_x: u64,
         reserve_y: u64,
         block_timestamp_last: u64
     }
 
+    /// 保存在 RESOURCE_ACCOUNT
     struct SwapInfo has key {
         signer_cap: account::SignerCapability,
         fee_to: address,
